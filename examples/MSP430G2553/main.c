@@ -13,7 +13,8 @@
 #define DEVICE_CLASS_VERSION    "1.1"
 
 // {C73CCF23-8BF5-4C2C-B330-EAD36F469D1A}
-const GUID DeviceID =           { 0xc73ccf23, 0x8bf5, 0x4c2c, { 0xb3, 0x30, 0xea, 0xd3, 0x6f, 0x46, 0x9d, 0x1a } };
+//const GUID DeviceID =           { 0xc73ccf23, 0x8bf5, 0x4c2c, { 0xb3, 0x30, 0xea, 0xd3, 0x6f, 0x46, 0x9d, 0x1a } };
+#define DEVICE_ID               "c73ccf23-8bf5-4c2c-b330-ead36f469d1a"
 
 #define NP_EQUIPMENT            "equipment"
 #define NP_STATE                "state"
@@ -45,28 +46,28 @@ const GUID DeviceID =           { 0xc73ccf23, 0x8bf5, 0x4c2c, { 0xb3, 0x30, 0xea
 #define D2G_EQUIPMENT           (MIN_CUSTOM_INTENT)
 #define G2D_LED                 (MIN_CUSTOM_INTENT + 1)
 
-static /*const*/ Equipment EQUIPMENTS[] =
-{
-    EQUIPMENT_INIT(LED0_EQP_NAME, LED0_EQP_CODE, LED0_EQP_TYPE),
-    EQUIPMENT_INIT(LED1_EQP_NAME, LED1_EQP_CODE, LED1_EQP_TYPE),
-    EQUIPMENT_INIT(BTN_EQP_NAME, BTN_EQP_CODE, BTN_EQP_TYPE)
-};
-
-static /*const*/ Parameter NOTIFICATION_PARAMS[] =
-{
-    PARAMETER_INIT(DT_STRING, NP_EQUIPMENT),
-    PARAMETER_INIT(DT_BOOLEAN, NP_STATE)
-};
-
-static /*const*/ Notification NOTIFICATIONS[] =
-{
-    NOTIFICATION_INIT(D2G_EQUIPMENT, NOTIFY_EQUIPMENT, NOTIFICATION_PARAMS)
-};
-
-static /*const*/ Command COMMANDS[] =
-{
-    COMMAND_INIT(G2D_LED, LED_CMD_NAME, NOTIFICATION_PARAMS)
-};
+//static /*const*/ Equipment EQUIPMENTS[] =
+//{
+//    EQUIPMENT_INIT(LED0_EQP_NAME, LED0_EQP_CODE, LED0_EQP_TYPE),
+//    EQUIPMENT_INIT(LED1_EQP_NAME, LED1_EQP_CODE, LED1_EQP_TYPE),
+//    EQUIPMENT_INIT(BTN_EQP_NAME, BTN_EQP_CODE, BTN_EQP_TYPE)
+//};
+//
+//static /*const*/ Parameter NOTIFICATION_PARAMS[] =
+//{
+//    PARAMETER_INIT(DT_STRING, NP_EQUIPMENT),
+//    PARAMETER_INIT(DT_BOOLEAN, NP_STATE)
+//};
+//
+//static /*const*/ Notification NOTIFICATIONS[] =
+//{
+//    NOTIFICATION_INIT(D2G_EQUIPMENT, NOTIFY_EQUIPMENT, NOTIFICATION_PARAMS)
+//};
+//
+//static /*const*/ Command COMMANDS[] =
+//{
+//    COMMAND_INIT(G2D_LED, LED_CMD_NAME, NOTIFICATION_PARAMS)
+//};
 
 
 static int strcmp(const char *s1, const char *s2)
@@ -84,21 +85,42 @@ static int strcmp(const char *s1, const char *s2)
 /** @brief Send device registration metadata. */
 static void SendRegMessage()
 {
-    RegData rd;
+//    RegData rd;
+//
+//    rd.DeviceID = DeviceID;
+//    rd.DeviceKey = DEVICE_KEY;
+//    rd.DeviceName = DEVICE_NAME;
+//    rd.DeviceClassName = DEVICE_CLASS_NAME;
+//    rd.DeviceClassVersion = DEVICE_CLASS_VERSION;
+//    rd.Equipment.Length = CountOf(EQUIPMENTS);
+//    rd.Equipment.Items = EQUIPMENTS;
+//    rd.Notifications.Length = CountOf(NOTIFICATIONS);
+//    rd.Notifications.Items = NOTIFICATIONS;
+//    rd.Commands.Length = CountOf(COMMANDS);
+//    rd.Commands.Items = COMMANDS;
+//
+//    SendRegistrationData(&rd);
 
-    rd.DeviceID = DeviceID;
-    rd.DeviceKey = DEVICE_KEY;
-    rd.DeviceName = DEVICE_NAME;
-    rd.DeviceClassName = DEVICE_CLASS_NAME;
-    rd.DeviceClassVersion = DEVICE_CLASS_VERSION;
-    rd.Equipment.Length = CountOf(EQUIPMENTS);
-    rd.Equipment.Items = EQUIPMENTS;
-    rd.Notifications.Length = CountOf(NOTIFICATIONS);
-    rd.Notifications.Items = NOTIFICATIONS;
-    rd.Commands.Length = CountOf(COMMANDS);
-    rd.Commands.Items = COMMANDS;
 
-    SendRegistrationData(&rd);
+    SendRegistration2Data("{"
+        "id:\"" DEVICE_ID "\","
+        "key:\"" DEVICE_KEY "\","
+        "name:\"" DEVICE_NAME "\","
+        "deviceClass:{"
+            "name:\"" DEVICE_CLASS_NAME"\","
+            "version:\"" DEVICE_CLASS_VERSION "\"},"
+        "equipment:["
+            "{code:\"" LED0_EQP_CODE "\",name:\"" LED0_EQP_NAME "\",type:\"" LED0_EQP_TYPE "\"},"
+            "{code:\"" LED1_EQP_CODE "\",name:\"" LED1_EQP_NAME "\",type:\"" LED1_EQP_TYPE "\"},"
+            "{code:\""  BTN_EQP_CODE "\",name:\""  BTN_EQP_NAME "\",type:\""  BTN_EQP_TYPE "\"}"
+            "],"
+        "commands:["
+            "{intent:257,name:\"UpdateLedState\",params:{equipment:str,state:bool}}"
+            "],"
+        "notifications:["
+            "{intent:256,name:\"equipment\",params:{equipment:str,state:bool}}"
+            "]"
+        "}");
 }
 
 /** @brief Send equipment notification. */
@@ -186,10 +208,7 @@ void main(void)
     Setup();
     InitializeDeviceHive(&UartSendBytes, &UartRecvBytes);
 
-    // Initial notifications
-    SendEquipmentNotification(LED0_EQP_CODE, (P1OUT&RLED_PIN)!=0);
-    SendEquipmentNotification(LED1_EQP_CODE, (P1OUT&GLED_PIN)!=0);
-    SendEquipmentNotification(BTN_EQP_CODE, g_prevBtnState);
+    SendRegMessage();
     while (TRUE)
     {
         BYTE btn = !(P1IN&BTN_PIN);
