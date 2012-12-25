@@ -27,6 +27,12 @@ enum Intent
     */
     D2G_NOTIFY          = 2,
 
+    /** @brief The registration 2 response.
+    @details Notification sent by the device in response to registration request.
+    Uses simple JSON response.
+    */
+    D2G_REGISTER2       = 3,
+
     /** @brief Custom device-specific intent.
     This is the minimum intent number for user-specific intents.
     */

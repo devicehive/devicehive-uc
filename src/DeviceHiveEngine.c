@@ -272,6 +272,23 @@ void SendRegistrationData(const RegData *rd)
     SendChecksum();
 }
 
+WORD GetRegistration2DataSize(const char *rd)
+{
+    return GetStringSize(rd);
+}
+
+void SendRegistration2Data(const char *rd)
+{
+    // Send header
+    MessageHeader msgh = MESSAGE_HEADER_INIT(D2G_REGISTER2);
+    msgh.Length = GetRegistration2DataSize(rd);
+
+    ResetChecksum(CHECKSUM_TX);
+    SendBytes((unsigned char*)&msgh, sizeof(msgh));
+    SendString(rd);
+    SendChecksum();
+}
+
 #endif // RegistrationData
 
 

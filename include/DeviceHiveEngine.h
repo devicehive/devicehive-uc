@@ -149,6 +149,19 @@ WORD GetRegistrationDataSize(const RegData *rd);
 */
 void SendRegistrationData(const RegData *rd);
 
+/** @relates RegData @ingroup Functions
+@brief Get registration 2 data size.
+@param[in] rd The registration data.
+@return The buffer size in bytes.
+*/
+WORD GetRegistration2DataSize(const char *rd);
+
+/** @relates RegData @ingroup Functions
+@brief Send registration 2 data.
+@param rd The registration data to send.
+*/
+void SendRegistration2Data(const char *rd);
+
 
 /** @relates NotificationData @ingroup Functions
 @brief Get command result notification data size.
