@@ -3,6 +3,10 @@
 
 #include "Message.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 
 /** @ingroup Functions
 @brief Initialize a DeviceHive Framework.
@@ -232,5 +236,10 @@ void ResetChecksum(int flag);
 @brief The number of elements in static array.
 */
 #define CountOf(arr) (sizeof(arr)/sizeof(arr[0]))
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

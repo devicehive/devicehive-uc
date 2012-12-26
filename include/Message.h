@@ -7,6 +7,11 @@
 #include "Notification.h"
 #include "Command.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Constants
 @brief The message intents.
 */
@@ -210,5 +215,10 @@ typedef struct
     */
     DWORD CommandID;
 } CommandData;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

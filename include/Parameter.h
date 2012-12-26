@@ -3,6 +3,11 @@
 
 #include "DataTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Types
 @brief The parameter metadata.
 @details This structure defines a command or notification parameter metadata,
@@ -49,5 +54,10 @@ typedef struct
     /** @brief The parameter elements. */
     Parameter *Items;
 } ParameterArray;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif
