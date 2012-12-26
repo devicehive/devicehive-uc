@@ -27,48 +27,67 @@ void Setup()
 }
 
 
-Equipment eqp[] =
-{
-    {LED_EQP_NAME, LED_EQP_CODE, LED_EQP_TYPE},
-    {BTN_EQP_NAME, BTN_EQP_CODE, BTN_EQP_TYPE}
-};
-
-Equipment * LedEqp = &(eqp[0]);
-Equipment * BtnEqp = &(eqp[1]);
-
-Parameter NotificationParams[] =
-{
-    {DT_STRING, NP_EQUIPMENT},
-    {DT_BOOLEAN, NP_STATE}
-};
-
-Notification ntf[] =
-{
-    {D2G_EQUIPMENT, NOTIFY_EQUIPMENT, {NPEQ_COUNT, NotificationParams}},
-};
-
-Command cmds[] =
-{
-    {G2D_LED, LED_CMD_NAME, {NPEQ_COUNT, NotificationParams}}
-};
-
+//Equipment eqp[] =
+//{
+//    {LED_EQP_NAME, LED_EQP_CODE, LED_EQP_TYPE},
+//    {BTN_EQP_NAME, BTN_EQP_CODE, BTN_EQP_TYPE}
+//};
+//
+//Equipment * LedEqp = &(eqp[0]);
+//Equipment * BtnEqp = &(eqp[1]);
+//
+//Parameter NotificationParams[] =
+//{
+//    {DT_STRING, NP_EQUIPMENT},
+//    {DT_BOOLEAN, NP_STATE}
+//};
+//
+//Notification ntf[] =
+//{
+//    {D2G_EQUIPMENT, NOTIFY_EQUIPMENT, {NPEQ_COUNT, NotificationParams}},
+//};
+//
+//Command cmds[] =
+//{
+//    {G2D_LED, LED_CMD_NAME, {NPEQ_COUNT, NotificationParams}}
+//};
+//
 void SendRegMessage()
 {
-    RegData rd;
+//    RegData rd;
+//
+//    rd.DeviceID = DeviceID;
+//    rd.DeviceKey = DEVICE_KEY; //dk;
+//    rd.DeviceName = DEVICE_NAME; //dn;
+//    rd.DeviceClassName = DEVICE_CLASS_NAME;
+//    rd.DeviceClassVersion = DEVICE_CLASS_VERSION;
+//    rd.Equipment.Length = EQUIPMENT_LENGTH;
+//    rd.Equipment.Items = eqp;
+//    rd.Notifications.Length = NOTIFICATIONS_COUNT;
+//    rd.Notifications.Items = ntf;
+//    rd.Commands.Length = COMMANDS_COUNT;
+//    rd.Commands.Items = cmds;
+//
+//    SendRegistrationData(&rd);
 
-    rd.DeviceID = DeviceID;
-    rd.DeviceKey = DEVICE_KEY; //dk;
-    rd.DeviceName = DEVICE_NAME; //dn;
-    rd.DeviceClassName = DEVICE_CLASS_NAME;
-    rd.DeviceClassVersion = DEVICE_CLASS_VERSION;
-    rd.Equipment.Length = EQUIPMENT_LENGTH;
-    rd.Equipment.Items = eqp;
-    rd.Notifications.Length = NOTIFICATIONS_COUNT;
-    rd.Notifications.Items = ntf;
-    rd.Commands.Length = COMMANDS_COUNT;
-    rd.Commands.Items = cmds;
-
-    SendRegistrationData(&rd);
+    SendRegistration2Data("{"
+        "id:\"" DEVICE_ID "\","
+        "key:\"" DEVICE_KEY "\","
+        "name:\"" DEVICE_NAME "\","
+        "deviceClass:{"
+            "name:\"" DEVICE_CLASS_NAME"\","
+            "version:\"" DEVICE_CLASS_VERSION "\"},"
+        "equipment:["
+            "{code:\"" LED_EQP_CODE "\",name:\"" LED_EQP_NAME "\",type:\"" LED_EQP_TYPE "\"},"
+            "{code:\"" BTN_EQP_CODE "\",name:\"" BTN_EQP_NAME "\",type:\"" BTN_EQP_TYPE "\"}"
+            "],"
+        "commands:["
+            "{intent:257,name:\"UpdateLedState\",params:{equipment:str,state:bool}}"
+            "],"
+        "notifications:["
+            "{intent:256,name:\"equipment\",params:{equipment:str,state:bool}}"
+            "]"
+        "}");
 }
 
 void SendEquipmentNotification(const char * EquipmentCode, BOOL state)
@@ -102,7 +121,7 @@ void ProcessCommand(MessageHeader * msgh)
                 {
                     LED_PIN = lcd.State;
                     SendNotificationData(lcd.Code, ST_SUCCESS, RESULT_OK);
-                    SendEquipmentNotification(LedEqp->Code, lcd.State);
+                    SendEquipmentNotification(LED_EQP_CODE, lcd.State);
                 }
                 else
                 {
@@ -132,8 +151,9 @@ void main()
     InitializeDeviceHive(&UsartSendBytes, &UsartRecvBytes);
 
     // Initial notifications
-    SendEquipmentNotification(LedEqp->Code, LED_PIN);
-    SendEquipmentNotification(BtnEqp->Code, FALSE);
+    SendRegMessage();
+    SendEquipmentNotification(LED_EQP_CODE, LED_PIN);
+    SendEquipmentNotification(BTN_EQP_CODE, FALSE);
 
     while (TRUE)
     {
@@ -142,7 +162,7 @@ void main()
 
         if (PrevBtn != btn)
         {
-            SendEquipmentNotification(BtnEqp->Code, btn);
+            SendEquipmentNotification(BTN_EQP_CODE, btn);
             PrevBtn = btn;
         }
 
@@ -158,8 +178,8 @@ void main()
                         if (RecvAndValidateChecksum())
                         {
                             SendRegMessage();
-                            SendEquipmentNotification(LedEqp->Code, LED_PIN);
-                            SendEquipmentNotification(BtnEqp->Code, btn);
+                            SendEquipmentNotification(LED_EQP_CODE, LED_PIN);
+                            SendEquipmentNotification(BTN_EQP_CODE, btn);
                         }
                         break;
                     case G2D_LED:
