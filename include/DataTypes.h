@@ -1,6 +1,11 @@
 #ifndef __DEVICEHIVE_DATATYPES_H__
 #define __DEVICEHIVE_DATATYPES_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @defgroup Constants DeviceHive Constants
 @brief Various constants related to binary protocol.
 @details DeviceHive Framework for microcontrollers defines a number of constants to use with its data types and functions.
@@ -84,5 +89,10 @@ typedef unsigned long DWORD;
 @brief Boolean type.
 */
 typedef unsigned char BOOL;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

@@ -3,6 +3,11 @@
 
 #include "DataTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Types
 @brief The equipment metadata.
 @details This structure defines the equipment metadata,
@@ -49,5 +54,10 @@ typedef struct
     /** @brief The equipment items. */
     Equipment *Items;
 } EquipmentArray;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

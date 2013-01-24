@@ -3,6 +3,11 @@
 
 #include "DataTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Types
 @brief The command metadata.
 @details This structure describes command metadata,
@@ -47,5 +52,10 @@ typedef struct
     /** @brief The command items. */
     Command *Items;
 } CommandArray;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

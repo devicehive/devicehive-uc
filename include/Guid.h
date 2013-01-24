@@ -3,6 +3,11 @@
 
 #include "DataTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Types
 @brief The %GUID structure.
 @details Global Unique IDentifier as documented in MSDN.
@@ -21,5 +26,10 @@ typedef struct
     /** @brief Data bytes 4. */
     BYTE Data4[8];
 } GUID;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

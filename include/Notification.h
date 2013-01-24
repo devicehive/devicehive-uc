@@ -3,6 +3,11 @@
 
 #include "DataTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Types
 @brief The notification metadata.
 @details This structure representrs a notification metadata description
@@ -44,5 +49,10 @@ typedef struct
     /** @brief The notification items. */
     Notification *Items;
 } NotificationArray;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif

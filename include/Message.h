@@ -7,6 +7,11 @@
 #include "Notification.h"
 #include "Command.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+
 /** @ingroup Constants
 @brief The message intents.
 */
@@ -26,6 +31,12 @@ enum Intent
     @details This message is sent in response to any command message.
     */
     D2G_NOTIFY          = 2,
+
+    /** @brief The registration 2 response.
+    @details Notification sent by the device in response to registration request.
+    Uses simple JSON response.
+    */
+    D2G_REGISTER2       = 3,
 
     /** @brief Custom device-specific intent.
     This is the minimum intent number for user-specific intents.
@@ -204,5 +215,10 @@ typedef struct
     */
     DWORD CommandID;
 } CommandData;
+
+
+#ifdef __cplusplus
+} // extern "C"
+#endif // __cplusplus
 
 #endif
